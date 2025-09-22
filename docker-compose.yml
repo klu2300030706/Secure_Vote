@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  backend:
+    build: ./backend
+    container_name: vote-backend
+    ports:
+      - "5001:5000"   # host:container (change host port if 5000 is used locally)
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - mongo
+
+  frontend:
+    build: ./frontend
+    container_name: vote-frontend
+    ports:
+      - "8082:80"     # host:container (change host port if 8081 is used locally)
+    depends_on:
+      - backend
+
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    ports:
+      - "27018:27017" # host:container (change host port if 27017 is used locally)
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
